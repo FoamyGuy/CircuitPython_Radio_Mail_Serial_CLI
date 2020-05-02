@@ -15,7 +15,7 @@ RADIO_FREQ_MHZ = 915.0  # Frequency of the radio in Mhz. Must match your
 # module! Can be a value like 915.0, 433.0, etc.
 
 # Define pins connected to the chip.
-# set GPIO pins as necessary - this example is for Raspberry Pi
+# set GPIO pins as necessary - this example is for Featherwing using D10 and D11
 CS = digitalio.DigitalInOut(board.D10)
 RESET = digitalio.DigitalInOut(board.D11)
 
@@ -28,11 +28,15 @@ rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, RADIO_FREQ_MHZ)
 rfm9x.enable_crc = True
 # set delay before transmitting ACK (seconds)
 rfm9x.ack_delay = 0.1
-# set node addresses
+# set starting node addresses
 rfm9x.node = 2
+
 rfm9x.destination = 1
 
+# list for received incoming messages.
 inbox = []
+
+# list for undelivered outgoing messages.
 undelivered_messages = []
 
 
@@ -107,11 +111,12 @@ def resend(undelivered_index=None):
     ):
         print("Did not receive ACK. Messaged marked as undelivered.")
         undelivered_messages.append({"to": rfm9x.destination, "content": msg_obj['content']})
+    else:
+        print("Recevied ACK")
     print("")
 
 
 def node(new_node=None):
-    global rfm9x
     if new_node == None:
         print("Node Address: {}".format(rfm9x.node))
         print()
@@ -181,6 +186,8 @@ def serail_send_content_read():
         ):
             print("Did not receive ACK. Messaged marked as undelivered.")
             undelivered_messages.append({"to": rfm9x.destination, "content": value})
+        else:
+            print("Recevied ACK")
         print()
         state = STATE_IDLE
 
