@@ -52,7 +52,7 @@ def send(to_address=None):
 
 def list_msgs():
     print("Index | From | Message ID")
-    print("=" * 50)
+    print("=" * 30)
     for i, msg in enumerate(inbox):
         print("{} | {} | {}".format(i, msg['from'], msg['message_id']))
     print()
@@ -91,7 +91,7 @@ def delete(index):
 
 def undelivered():
     print("Index | To | Message Content")
-    print("=" * 50)
+    print("=" * 30)
     for i, msg in enumerate(undelivered_messages):
         print("{} | {} | {}".format(i, msg['to'], msg['content']))
     print()
