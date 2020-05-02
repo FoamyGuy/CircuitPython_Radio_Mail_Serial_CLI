@@ -124,7 +124,18 @@ def node(new_node=None):
 
 
 def mail_help():
-    print("Help")
+    print("Welcome to CLI Mail System. Valid Commands:\n")
+    print("read [index] - e.g. 'read 0' Print the contents the message with index specified\n")
+    print("list - Print all messages from the inbox.\n")
+    print(
+        "send [address] - e.g. 'send 8' Initiate a new message to the specified address. You will be prompted for the message contenets.\n")
+    print("help - Print this message.\n")
+    print("delete [index] - e.g. 'delete 0' Delete the message with the index specified from the inbox.\n")
+    print(
+        "address [optional_new_address] e.g. 'address' or 'address 3' Print the current address, or set the address to the one specified.\n")
+    print("undelivered - Print all undelivered messages.\n")
+    print(
+        "resend [undelivered_index] - e.g. 'resend 0' Attempt to resend the undelivered message with the specified index.\n")
 
 
 COMMAND_MAP = {
