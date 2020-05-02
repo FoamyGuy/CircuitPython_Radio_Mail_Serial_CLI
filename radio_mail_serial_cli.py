@@ -56,7 +56,7 @@ def list_msgs():
 
 def read(index=None):
     if index == None:
-        print("Must pass index e.g. 'read 0' run 'help' for more.")
+        print("Must pass index e.g. 'read 0' run 'list' to see indexes. Run 'help' for more.")
         print()
         return
     index = int(index)
@@ -72,7 +72,7 @@ def read(index=None):
 
 def delete(index):
     if index == None:
-        print("Must pass index e.g. 'delete 0' run 'help' for more.")
+        print("Must pass index e.g. 'delete 0' run 'list' to see indexes. Run 'help' for more.")
         print()
         return
     index = int(index)
@@ -124,18 +124,18 @@ def node(new_node=None):
 
 
 def mail_help():
-    print("Welcome to CLI Mail System. Valid Commands:\n")
+    print("CLI Mail System Help:\n")
     print("read [index] - e.g. 'read 0' Print the contents the message with index specified\n")
     print("list - Print all messages from the inbox.\n")
     print(
         "send [address] - e.g. 'send 8' Initiate a new message to the specified address. You will be prompted for the message contenets.\n")
-    print("help - Print this message.\n")
+    print("help - Print this help message.\n")
     print("delete [index] - e.g. 'delete 0' Delete the message with the index specified from the inbox.\n")
     print(
         "address [optional_new_address] e.g. 'address' or 'address 3' Print the current address, or set the address to the one specified.\n")
-    print("undelivered - Print all undelivered messages.\n")
+    print("undelivered - Print all undelivered messages. Shows indexes used with resend.\n")
     print(
-        "resend [undelivered_index] - e.g. 'resend 0' Attempt to resend the undelivered message with the specified index.\n")
+        "resend [undelivered_index] - e.g. 'resend 0' Attempt to resend the undelivered message with the specified index. Run 'undelivered' to see indexes.\n")
 
 
 COMMAND_MAP = {
@@ -185,6 +185,8 @@ def serail_send_content_read():
         state = STATE_IDLE
 
 
+print("Welcome to CLI Mail System. Currently listening on address {}".format(rfm9x.node))
+print("Run 'address [new_address]' to change to a different address. Run 'help' for more.")
 while True:
     packet = rfm9x.receive(with_ack=True, with_header=True)
     # If no packet was received during the timeout then None is returned.
