@@ -54,29 +54,37 @@ def list_msgs():
     print("Index | From | Message ID")
     print("=" * 30)
     for i, msg in enumerate(inbox):
-        print("{} | {} | {}".format(i, msg['from'], msg['message_id']))
+        print("{} | {} | {}".format(i, msg["from"], msg["message_id"]))
     print()
 
 
 def read(index=None):
     if index == None:
-        print("Must pass index e.g. 'read 0' run 'list' to see indexes. Run 'help' for more.")
+        print(
+            "Must pass index e.g. 'read 0' run 'list' to see indexes. Run 'help' for more."
+        )
         print()
         return
     index = int(index)
     if index < len(inbox):
-        print("From: {}".format(inbox[index]['from']))
-        data_string = ''.join([chr(b) for b in inbox[index]['content']])
+        print("From: {}".format(inbox[index]["from"]))
+        data_string = "".join([chr(b) for b in inbox[index]["content"]])
         print("Message: {}".format(data_string))
         print()
     else:
-        print("index {} out of bounds. run 'list' to see indexes. run 'help' for more.".format(index))
+        print(
+            "index {} out of bounds. run 'list' to see indexes. run 'help' for more.".format(
+                index
+            )
+        )
         print()
 
 
 def delete(index):
     if index == None:
-        print("Must pass index e.g. 'delete 0' run 'list' to see indexes. Run 'help' for more.")
+        print(
+            "Must pass index e.g. 'delete 0' run 'list' to see indexes. Run 'help' for more."
+        )
         print()
         return
     index = int(index)
@@ -85,7 +93,11 @@ def delete(index):
         del inbox[index]
         print()
     else:
-        print("index {} out of bounds. Run 'list' to see indexes. Run 'help' for more.".format(index))
+        print(
+            "index {} out of bounds. Run 'list' to see indexes. Run 'help' for more.".format(
+                index
+            )
+        )
         print()
 
 
@@ -93,7 +105,7 @@ def undelivered():
     print("Index | To | Message Content")
     print("=" * 30)
     for i, msg in enumerate(undelivered_messages):
-        print("{} | {} | {}".format(i, msg['to'], msg['content']))
+        print("{} | {} | {}".format(i, msg["to"], msg["content"]))
     print()
 
 
@@ -105,12 +117,12 @@ def resend(undelivered_index=None):
     undelivered_index = int(undelivered_index)
     msg_obj = undelivered_messages[undelivered_index]
     del undelivered_messages[undelivered_index]
-    rfm9x.destination = int(msg_obj['to'])
-    if not rfm9x.send_with_ack(
-            bytes(msg_obj['content'], "UTF-8")
-    ):
+    rfm9x.destination = int(msg_obj["to"])
+    if not rfm9x.send_with_ack(bytes(msg_obj["content"], "UTF-8")):
         print("Did not receive ACK. Messaged marked as undelivered.")
-        undelivered_messages.append({"to": rfm9x.destination, "content": msg_obj['content']})
+        undelivered_messages.append(
+            {"to": rfm9x.destination, "content": msg_obj["content"]}
+        )
     else:
         print("Recevied ACK")
     print("")
@@ -130,17 +142,26 @@ def node(new_node=None):
 
 def mail_help():
     print("CLI Mail System Help:\n")
-    print("read [index] - e.g. 'read 0' Print the contents the message with index specified\n")
+    print(
+        "read [index] - e.g. 'read 0' Print the contents the message with index specified\n"
+    )
     print("list - Print all messages from the inbox.\n")
     print(
-        "send [address] - e.g. 'send 8' Initiate a new message to the specified address. You will be prompted for the message contenets.\n")
+        "send [address] - e.g. 'send 8' Initiate a new message to the specified address. You will be prompted for the message contenets.\n"
+    )
     print("help - Print this help message.\n")
-    print("delete [index] - e.g. 'delete 0' Delete the message with the index specified from the inbox.\n")
     print(
-        "address [optional_new_address] e.g. 'address' or 'address 3' Print the current address, or set the address to the one specified.\n")
-    print("undelivered - Print all undelivered messages. Shows indexes used with resend.\n")
+        "delete [index] - e.g. 'delete 0' Delete the message with the index specified from the inbox.\n"
+    )
     print(
-        "resend [undelivered_index] - e.g. 'resend 0' Attempt to resend the undelivered message with the specified index. Run 'undelivered' to see indexes.\n")
+        "address [optional_new_address] e.g. 'address' or 'address 3' Print the current address, or set the address to the one specified.\n"
+    )
+    print(
+        "undelivered - Print all undelivered messages. Shows indexes used with resend.\n"
+    )
+    print(
+        "resend [undelivered_index] - e.g. 'resend 0' Attempt to resend the undelivered message with the specified index. Run 'undelivered' to see indexes.\n"
+    )
 
 
 COMMAND_MAP = {
@@ -151,7 +172,7 @@ COMMAND_MAP = {
     "delete": delete,
     "resend": resend,
     "address": node,
-    "help": mail_help
+    "help": mail_help,
 }
 
 
@@ -181,9 +202,7 @@ def serail_send_content_read():
         value = input()
         # send message with value as body
         print("sending: {} - {}".format(rfm9x.destination, value))
-        if not rfm9x.send_with_ack(
-                bytes(value, "UTF-8")
-        ):
+        if not rfm9x.send_with_ack(bytes(value, "UTF-8")):
             print("Did not receive ACK. Messaged marked as undelivered.")
             undelivered_messages.append({"to": rfm9x.destination, "content": value})
         else:
@@ -192,8 +211,12 @@ def serail_send_content_read():
         state = STATE_IDLE
 
 
-print("Welcome to CLI Mail System. Currently listening on address {}".format(rfm9x.node))
-print("Run 'address [new_address]' to change to a different address. Run 'help' for more.")
+print(
+    "Welcome to CLI Mail System. Currently listening on address {}".format(rfm9x.node)
+)
+print(
+    "Run 'address [new_address]' to change to a different address. Run 'help' for more."
+)
 while True:
     packet = rfm9x.receive(with_ack=True, with_header=True)
     # If no packet was received during the timeout then None is returned.
@@ -202,11 +225,9 @@ while True:
         from_address = hex(packet[1])
         message_id = hex(packet[2])
         content = packet[4:]
-        inbox.append({
-            "from": from_address,
-            "content": content,
-            "message_id": message_id
-        })
+        inbox.append(
+            {"from": from_address, "content": content, "message_id": message_id}
+        )
         print("New Message Arrived!")
         print()
 
